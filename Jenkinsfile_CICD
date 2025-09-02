@@ -12,7 +12,7 @@ pipeline {
     stages {
         stage('Git Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/jaiswaladi246/3-Tier-DevSecOps-Mega-Project.git'
+                git branch: 'main', url: 'https://github.com/Yadav-SubratKumar/3-Tier-DevSecOps-Mega-Project.git'
             }
         }
         
@@ -65,8 +65,8 @@ pipeline {
                 script {
                     withDockerRegistry(credentialsId: 'docker-cred') {
                         dir('api') {
-                            sh 'docker build -t adijaiswal/backend:latest .'
-                            sh 'trivy image --format table -o backend-image-report.html adijaiswal/backend:latest '
+                            sh 'docker build -t subratdevops/backend:latest .'
+                            sh 'trivy image --format table -o backend-image-report.html subratdevops/backend:latest '
                             sh 'docker push adijaiswal/backend:latest'
                            
                         }
@@ -80,8 +80,8 @@ pipeline {
                 script {
                     withDockerRegistry(credentialsId: 'docker-cred') {
                         dir('client') {
-                            sh 'docker build -t adijaiswal/frontend:latest .'
-                            sh 'trivy image --format table -o frontend-image-report.html adijaiswal/frontend:latest '
+                            sh 'docker build -t subratdevops/frontend:latest .'
+                            sh 'trivy image --format table -o frontend-image-report.html subratdevops/frontend:latest '
                             sh 'docker push adijaiswal/frontend:latest'
                         }
                     }
@@ -101,13 +101,12 @@ pipeline {
        stage('Deployment To Prod') {
             steps {
                 script {
-                    withKubeConfig(caCertificate: '', clusterName: 'devopsshack-cluster', contextName: '', credentialsId: 'k8-prod-token', namespace: 'prod', restrictKubeConfigAccess: false, serverUrl: 'https://AFC6FCFF5360B30D5E8950396E38A8C4.gr7.ap-south-1.eks.amazonaws.com') {
+                    withKubeConfig( clusterName: 'minicube', contextName: '', credentialsId: 'token', namespace: 'prod', restrictKubeConfigAccess: false, serverUrl: 'https://198.10.12.127') {
                         sh 'kubectl apply -f k8s-prod/sc.yaml'
                         sleep 20
                         sh 'kubectl apply -f k8s-prod/mysql.yaml -n prod'
                         sh 'kubectl apply -f k8s-prod/backend.yaml -n prod'
                         sh 'kubectl apply -f k8s-prod/frontend.yaml -n prod'
-                        sh 'kubectl apply -f k8s-prod/ci.yaml'
                         sh 'kubectl apply -f k8s-prod/ingress.yaml -n prod'
                         sleep 30
                     }
@@ -130,3 +129,4 @@ pipeline {
             
     }
 }
+
