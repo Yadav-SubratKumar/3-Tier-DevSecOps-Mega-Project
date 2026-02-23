@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: mysql-secret
-  namespace: jenkins
+  namespace: prod
   labels:
     app: mysql
 type: Opaque
@@ -15,7 +15,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: mysql-config
-  namespace: jenkins
+  namespace: prod
   labels:
     app: mysql
 data:
@@ -26,7 +26,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: mysql-initdb-config
-  namespace: jenkins
+  namespace: prod
   labels:
     app: mysql
 data:
@@ -50,7 +50,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: mysql
-  namespace: jenkins
+  namespace: prod
   labels:
     app: mysql
 spec:
@@ -66,7 +66,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: mysql
-  namespace: jenkins
+  namespace: prod
   labels:
     app: mysql
 spec:
@@ -110,7 +110,7 @@ spec:
         name: mysql-persistent-storage
       spec:
         accessModes: [ "ReadWriteOnce" ]
-        storageClassName: ebs-sc
+        storageClassName: local-storage
         resources:
           requests:
-            storage: 5Gi
+            storage: 2Gi

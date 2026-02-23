@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend
-  namespace: jenkins
+  namespace: prod
   labels:
     app: backend
 spec:
@@ -41,7 +41,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: backend-svc
-  namespace: jenkins
+  namespace: prod
 spec:
   selector:
     app: backend

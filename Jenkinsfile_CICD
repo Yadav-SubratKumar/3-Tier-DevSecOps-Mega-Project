@@ -67,7 +67,7 @@ pipeline {
                         dir('api') {
                             sh 'docker build -t subratdevops/backend:latest .'
                             sh 'trivy image --format table -o backend-image-report.html subratdevops/backend:latest '
-                            sh 'docker push adijaiswal/backend:latest'
+                            sh 'docker push subratdevops/backend:latest'
                            
                         }
                     }
@@ -82,7 +82,7 @@ pipeline {
                         dir('client') {
                             sh 'docker build -t subratdevops/frontend:latest .'
                             sh 'trivy image --format table -o frontend-image-report.html subratdevops/frontend:latest '
-                            sh 'docker push adijaiswal/frontend:latest'
+                            sh 'docker push subratdevops/frontend:latest'
                         }
                     }
                 }
@@ -117,7 +117,7 @@ pipeline {
         stage('Verify Deployment To Prod') {
             steps {
                 script {
-                    withKubeConfig(caCertificate: '', clusterName: 'devopsshack-cluster', contextName: '', credentialsId: 'k8-prod-token', namespace: 'prod', restrictKubeConfigAccess: false, serverUrl: $URL) {
+                    withKubeConfig( clusterName: 'minicube', contextName: '', credentialsId: 'token', namespace: 'prod', restrictKubeConfigAccess: false, serverUrl: 'https://198.10.12.127') {
                         sh 'kubectl get pods -n prod'
                         sleep 20
                          sh 'kubectl get ingress -n prod'
